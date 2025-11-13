@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiru Beat Dashboard</title>
+<link rel="icon" type="image/x-icon" href="hiru official squared.jpg">
+  <style>
+        body {
+           
+            cursor: url('https://cur.cursors-4u.net/cursors/cur-2/cur103.cur'), auto; 
+        }
+    </style>
+
+<style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    html, body { width: 100%; height: 100%; overflow: hidden; background: #0e0e0e; color: #fff; }
+
+    canvas { 
+        position: fixed; 
+        top: 0; 
+        left: 0; 
+        width: 100%; 
+        height: 100%; 
+        z-index: -1; 
+        display: block; 
+    }
+
+    .dashboard {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .dashboard h1 {
+        font-size: 3rem;
+        margin-bottom: 10px;
+        color: #ff4c4c;
+        text-shadow: 0 0 10px #ff4c4c, 0 0 20px #ff4c4c;
+    }
+
+    .dashboard p {
+        margin-bottom: 40px;
+        font-size: 1.2rem;
+        color: #fff;
+        opacity: 0.8;
+    }
+
+    .btn-container {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        justify-content: center;
+    }
+
+    .dashboard-btn {
+        padding: 20px 40px;
+        background: linear-gradient(135deg, #ff4c4c, #ff8c00);
+        border: none;
+        border-radius: 12px;
+        color: #fff;
+        font-size: 1.2rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.4s;
+        box-shadow: 0 5px 15px rgba(255, 76, 76, 0.4);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .dashboard-btn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 10px 25px rgba(255, 76, 76, 0.6);
+    }
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="dashboard">
+    <h1>Hiru Beats Dashboard</h1>
+    <p>Select an app to continue</p>
+    <div class="btn-container">
+        <button class="dashboard-btn" onclick="location.href='player.html'">Audio Player</button>
+        <button class="dashboard-btn" onclick="location.href='mixer.html'">Audio Mixer</button>
+        <button class="dashboard-btn" onclick="location.href='visualizer audioplayer.html'">Visualizer Audio Player</button>
+        <button class="dashboard-btn" onclick="location.href='index.html'">Audio Visualizer</button>
+    </div>
+</div>
+
+<script>
+window.onload = function() {
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    const colors = ['#ff4c4c','#ff8c00','#00ffcc','#4c00ff','#ff00aa'];
+
+    class Dot {
+        constructor() {
+            this.reset();
+        }
+        reset() {
+            this.x = Math.random() * canvas.width;
+            this.y = Math.random() * canvas.height;
+            this.radius = Math.random() * 3 + 1;
+            this.color = colors[Math.floor(Math.random() * colors.length)];
+            this.speedX = (Math.random() - 0.5) * 1.2;
+            this.speedY = (Math.random() - 0.5) * 1.2;
+        }
+        draw() {
+            ctx.beginPath();
+            ctx.arc(this.x, this.y, this.radius, 0, Math.PI*2);
+            ctx.fillStyle = this.color;
+            ctx.fill();
+        }
+        update() {
+            this.x += this.speedX;
+            this.y += this.speedY;
+
+            if(this.x < 0) this.x = canvas.width;
+            if(this.x > canvas.width) this.x = 0;
+            if(this.y < 0) this.y = canvas.height;
+            if(this.y > canvas.height) this.y = 0;
+
+            this.draw();
+        }
+    }
+
+    const dots = [];
+    for(let i=0;i<150;i++){
+        dots.push(new Dot());
+    }
+
+    function animate(){
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        dots.forEach(dot => dot.update());
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+};
+</script>
+
+</body>
+</html>
+
